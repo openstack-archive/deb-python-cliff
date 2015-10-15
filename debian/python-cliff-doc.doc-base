@@ -1,0 +1,9 @@
+Document: python-cliff
+Title: cliff - Command Line Interface Formulation Framework documentation
+Author: Doug Hellmann
+Abstract: cliff is a framework for building command line programs. It uses plugins to define sub-commands, output formatters, and other extensions.
+Section: Programming/Python
+
+Format: HTML
+Index: /usr/share/doc/python-cliff-doc/html/index.html
+Files: /usr/share/doc/python-cliff-doc/html/*.html

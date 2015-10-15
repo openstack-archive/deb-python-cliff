@@ -1,0 +1,48 @@
+#!/usr/bin/make -f
+
+PYTHONS:=$(shell pyversions -vr)
+PYTHON3S:=$(shell py3versions -vr)
+
+%:
+	dh $@ --with python2,python3,sphinxdoc --buildsystem=python_distutils
+
+override_dh_auto_install:
+	set -e && for pyvers in $(PYTHONS); do \
+		python$$pyvers setup.py install --install-layout=deb \
+			--root $(CURDIR)/debian/python-cliff; \
+	done
+	set -e && for pyvers in $(PYTHON3S); do \
+		python$$pyvers setup.py install --install-layout=deb \
+			--root $(CURDIR)/debian/python3-cliff; \
+	done
+
+override_dh_installchangelogs:
+	dh_installchangelogs -O--buildsystem=python_distutils doc/source/history.rst
+
+override_dh_clean:
+	dh_clean
+	rm -rf cliff.egg-info build
+
+override_dh_sphinxdoc:
+ifeq (,$(findstring nodocs, $(DEB_BUILD_OPTIONS)))
+	PYTHONPATH=$(CURDIR) sphinx-build -b html -a -c doc/source doc/source \
+	    $(CURDIR)/debian/python-cliff-doc/usr/share/doc/python-cliff-doc/html
+	dh_sphinxdoc -O--buildsystem=python_distutils -ppython-cliff-doc
+endif
+
+override_dh_python2:
+	dh_python2 -O--buildsystem=python_distutils -ppython-cliff
+
+override_dh_python3:
+	dh_python3 -O--buildsystem=python_distutils -ppython3-cliff
+
+override_dh_compress:
+	dh_compress -O--buildsystem=python_distutils -i -X.rst -X.js -X.html -X.txt -X.py
+
+override_dh_auto_test:
+ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
+	set -e -x; \
+	PYTHONPATH=. nosetests
+	PYTHONPATH=. nosetests3
+endif
+
