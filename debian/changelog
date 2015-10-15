@@ -3,6 +3,7 @@ python-cliff (1.15.0-1) unstable; urgency=medium
   * New upstream release.
   * Uploading to unstable.
   * Moved the package to PKG OpenStack as I lost write access to the DPMT.
+  * Added build-depends openstack-pkg-tools.
 
  -- Thomas Goirand <zigo@debian.org>  Thu, 15 Oct 2015 23:12:13 +0000
 

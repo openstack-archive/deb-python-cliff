@@ -6,6 +6,7 @@ Uploaders: Jan Dittberner <jandd@debian.org>,
            Thomas Goirand <zigo@debian.org>,
 Build-Depends: debhelper (>= 9),
                dh-python,
+               openstack-pkg-tools,
                python-all,
                python-pbr (>= 1.3),
                python-sphinx,
@@ -33,9 +34,9 @@ Build-Depends-Indep: python-cmd2,
                      python3-stevedore (>= 1.5.0),
                      python3-unicodecsv,
 Standards-Version: 3.9.6
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=openstack/python-cliff.git
+Vcs-Git: git://anonscm.debian.org/openstack/python-cliff.git
 Homepage: https://github.com/dreamhost/cliff
-Vcs-Svn: svn://anonscm.debian.org/python-modules/packages/python-cliff/trunk/
-Vcs-Browser: http://anonscm.debian.org/viewvc/python-modules/packages/python-cliff/trunk
 
 Package: python-cliff
 Architecture: all

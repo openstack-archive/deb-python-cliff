@@ -3,15 +3,19 @@
 PYTHONS:=$(shell pyversions -vr)
 PYTHON3S:=$(shell py3versions -vr)
 
+UPSTREAM_GIT = git://github.com/openstack/cliff.git
+include /usr/share/openstack-pkg-tools/pkgos.make
+
+
 %:
 	dh $@ --with python2,python3,sphinxdoc --buildsystem=python_distutils
 
 override_dh_auto_install:
-	set -e && for pyvers in $(PYTHONS); do \
+	set -e ; for pyvers in $(PYTHONS); do \
 		python$$pyvers setup.py install --install-layout=deb \
 			--root $(CURDIR)/debian/python-cliff; \
 	done
-	set -e && for pyvers in $(PYTHON3S); do \
+	set -e ; for pyvers in $(PYTHON3S); do \
 		python$$pyvers setup.py install --install-layout=deb \
 			--root $(CURDIR)/debian/python3-cliff; \
 	done
@@ -45,4 +49,3 @@ ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
 	PYTHONPATH=. nosetests
 	PYTHONPATH=. nosetests3
 endif
-
