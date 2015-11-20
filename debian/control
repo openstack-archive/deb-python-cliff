@@ -23,6 +23,7 @@ Build-Depends-Indep: python-cmd2,
                      python-six (>= 1.9.0),
                      python-stevedore (>= 1.5.0),
                      python-unicodecsv,
+                     python-yaml,
                      python3-cmd2,
                      python3-coverage,
                      python3-httplib2,
@@ -33,6 +34,7 @@ Build-Depends-Indep: python-cmd2,
                      python3-six (>= 1.9.0),
                      python3-stevedore (>= 1.5.0),
                      python3-unicodecsv,
+                     python3-yaml,
 Standards-Version: 3.9.6
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=openstack/python-cliff.git
 Vcs-Git: git://anonscm.debian.org/openstack/python-cliff.git

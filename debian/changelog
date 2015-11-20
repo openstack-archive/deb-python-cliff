@@ -1,3 +1,9 @@
+python-cliff (1.15.0-2) unstable; urgency=medium
+
+  * Added missing build-depends on python{3,}-yaml.
+
+ -- Thomas Goirand <zigo@debian.org>  Fri, 20 Nov 2015 16:13:06 +0100
+
 python-cliff (1.15.0-1) unstable; urgency=medium
 
   * New upstream release.
