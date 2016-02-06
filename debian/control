@@ -36,8 +36,8 @@ Build-Depends-Indep: python-cmd2,
                      python3-unicodecsv,
                      python3-yaml,
 Standards-Version: 3.9.6
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=openstack/python-cliff.git
-Vcs-Git: git://anonscm.debian.org/openstack/python-cliff.git
+Vcs-Browser: https://anonscm.debian.org/gitweb/?p=openstack/python-cliff.git
+Vcs-Git: https://anonscm.debian.org/git/openstack/python-cliff.git
 Homepage: https://github.com/dreamhost/cliff
 
 Package: python-cliff
