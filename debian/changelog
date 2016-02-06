@@ -1,6 +1,7 @@
 python-cliff (1.15.0-3) unstable; urgency=medium
 
   * Removed argparse from requirements.txt (Closes: #810126).
+  * Added patch to fix Python 3.5 unit tests.
 
  -- Thomas Goirand <zigo@debian.org>  Sat, 06 Feb 2016 10:30:41 +0000
 
