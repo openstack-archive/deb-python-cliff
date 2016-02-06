@@ -1,0 +1,15 @@
+Description: Removes argparse from requirements.txt
+Author: Thomas Goirand <zigo@debian.org>
+Forwarded: no
+Last-Update: 2016-02-06
+
+--- python-cliff-1.15.0.orig/requirements.txt
++++ python-cliff-1.15.0/requirements.txt
+@@ -2,7 +2,6 @@
+ # of appearance. Changing the order has an impact on the overall integration
+ # process, which may cause wedges in the gate later.
+ pbr<2.0,>=1.4
+-argparse
+ cmd2>=0.6.7
+ PrettyTable<0.8,>=0.7
+ pyparsing>=2.0.1
