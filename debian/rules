@@ -46,6 +46,11 @@ override_dh_compress:
 
 override_dh_auto_test:
 ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
+	set -e ; set -x ; for i in 2.7 $(PYTHON3S) ; do \
+		PYMAJOR=`echo $$i | cut -d'.' -f1` ; \
+		echo "===> Testing with python$$i (python$$PYMAJOR)" ; \
+		python$$i -m nose -v ; \
+	done
 	set -e -x; \
 	PYTHONPATH=. nosetests
 	PYTHONPATH=. nosetests3
