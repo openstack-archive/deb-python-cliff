@@ -5,7 +5,15 @@ Last-Update: 2016-02-06
 
 --- python-cliff-1.15.0.orig/cliff/tests/test_formatters_csv.py
 +++ python-cliff-1.15.0/cliff/tests/test_formatters_csv.py
-@@ -14,11 +14,15 @@ def test_commaseparated_list_formatter()
+@@ -3,6 +3,7 @@
+ import mock
+ 
+ import six
++import sys
+ 
+ from cliff.formatters import commaseparated
+ 
+@@ -14,11 +15,15 @@ def test_commaseparated_list_formatter()
      d2 = ('D', 'E', 'F')
      data = [d1, d2]
      expected = 'a,b,c\nA,B,C\nD,E,F\n'
@@ -22,7 +30,7 @@ Last-Update: 2016-02-06
      assert expected == actual
  
  
-@@ -30,11 +34,13 @@ def test_commaseparated_list_formatter_u
+@@ -30,11 +35,13 @@ def test_commaseparated_list_formatter_u
      d2 = (u'D', u'E', happy)
      data = [d1, d2]
      expected = u'a,b,c\nA,B,C\nD,E,%s\n' % happy
