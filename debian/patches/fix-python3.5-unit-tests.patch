@@ -13,7 +13,7 @@ Last-Update: 2016-02-06
  
  from cliff.formatters import commaseparated
  
-@@ -14,11 +15,15 @@ def test_commaseparated_list_formatter()
+@@ -14,11 +15,16 @@ def test_commaseparated_list_formatter()
      d2 = ('D', 'E', 'F')
      data = [d1, d2]
      expected = 'a,b,c\nA,B,C\nD,E,F\n'
@@ -26,11 +26,12 @@ Last-Update: 2016-02-06
      parsed_args.quote_mode = 'none'
      sf.emit_list(c, data, output, parsed_args)
      actual = output.getvalue()
-+    actual = actual.decode('utf-8')
++    if six.PY2 or sys.version_info >= (3, 5):
++        actual = actual.decode('utf-8')
      assert expected == actual
  
  
-@@ -30,11 +35,13 @@ def test_commaseparated_list_formatter_u
+@@ -30,11 +36,14 @@ def test_commaseparated_list_formatter_u
      d2 = (u'D', u'E', happy)
      data = [d1, d2]
      expected = u'a,b,c\nA,B,C\nD,E,%s\n' % happy
@@ -44,8 +45,8 @@ Last-Update: 2016-02-06
      sf.emit_list(c, data, output, parsed_args)
      actual = output.getvalue()
 -    if six.PY2:
--        actual = actual.decode('utf-8')
-+    actual = actual.decode('utf-8')
++    if six.PY2 or sys.version_info >= (3, 5):
+         actual = actual.decode('utf-8')
      assert expected == actual
 --- python-cliff-1.15.0.orig/cliff/tests/test_help.py
 +++ python-cliff-1.15.0/cliff/tests/test_help.py
