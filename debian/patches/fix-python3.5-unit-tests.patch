@@ -5,12 +5,15 @@ Last-Update: 2016-02-06
 
 --- python-cliff-1.15.0.orig/cliff/tests/test_formatters_csv.py
 +++ python-cliff-1.15.0/cliff/tests/test_formatters_csv.py
-@@ -14,11 +14,12 @@ def test_commaseparated_list_formatter()
+@@ -14,11 +14,15 @@ def test_commaseparated_list_formatter()
      d2 = ('D', 'E', 'F')
      data = [d1, d2]
      expected = 'a,b,c\nA,B,C\nD,E,F\n'
 -    output = six.StringIO()
-+    output = six.BytesIO()
++    if six.PY2 or sys.version_info >= (3, 5):
++        output = six.BytesIO()
++    else:
++        output = six.StringIO()
      parsed_args = mock.Mock()
      parsed_args.quote_mode = 'none'
      sf.emit_list(c, data, output, parsed_args)
@@ -19,19 +22,21 @@ Last-Update: 2016-02-06
      assert expected == actual
  
  
-@@ -30,11 +31,11 @@ def test_commaseparated_list_formatter_u
+@@ -30,11 +34,13 @@ def test_commaseparated_list_formatter_u
      d2 = (u'D', u'E', happy)
      data = [d1, d2]
      expected = u'a,b,c\nA,B,C\nD,E,%s\n' % happy
 -    output = six.StringIO()
-+    output = six.BytesIO()
++    if six.PY2 or sys.version_info >= (3, 5):
++        output = six.BytesIO()
++    else:
++        output = six.StringIO()
      parsed_args = mock.Mock()
      parsed_args.quote_mode = 'none'
      sf.emit_list(c, data, output, parsed_args)
      actual = output.getvalue()
 -    if six.PY2:
 -        actual = actual.decode('utf-8')
-+#    if six.PY2:
 +    actual = actual.decode('utf-8')
      assert expected == actual
 --- python-cliff-1.15.0.orig/cliff/tests/test_help.py
