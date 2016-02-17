@@ -1,7 +1,8 @@
 python-cliff (1.15.0-3) unstable; urgency=medium
 
   * Removed argparse from requirements.txt (Closes: #810126).
-  * Added patch to fix Python 3.5 unit tests.
+  * Added patch to fix Python 3.5 unit tests (in fact, removing some broken
+    tests).
   * Running unit tests for all available versions of Python.
   * VCS URLs using HTTPS.
 
