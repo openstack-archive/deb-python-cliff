@@ -51,7 +51,4 @@ ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
 		echo "===> Testing with python$$i (python$$PYMAJOR)" ; \
 		python$$i -m nose -v ; \
 	done
-	set -e -x; \
-	PYTHONPATH=. nosetests
-	PYTHONPATH=. nosetests3
 endif
