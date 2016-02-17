@@ -49,6 +49,6 @@ ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
 	set -e ; set -x ; for i in 2.7 $(PYTHON3S) ; do \
 		PYMAJOR=`echo $$i | cut -d'.' -f1` ; \
 		echo "===> Testing with python$$i (python$$PYMAJOR)" ; \
-		python$$i -m nose -v ; \
+		PYTHONPATH=. PYTHON=python$$i python$$i -m nose -v ; \
 	done
 endif
