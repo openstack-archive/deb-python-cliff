@@ -8,6 +8,7 @@ python-cliff (2.1.0-1) experimental; urgency=medium
   * Remove arparse in requirements.txt patch.
   * Fixed (build-)depends for this release.
   * Removed Py 3.5 unit test patch.
+  * Using pkgos-dh_auto_install from openstack-pkg-tools >= 52~.
 
  -- Thomas Goirand <zigo@debian.org>  Wed, 13 Jul 2016 13:48:36 +0000
 
