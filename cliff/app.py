@@ -1,38 +1,20 @@
 """Application base class.
 """
 
-import argparse
-import codecs
 import inspect
 import locale
 import logging
 import logging.handlers
 import os
 import sys
-import operator
 
+from cliff import argparse
 from .complete import CompleteCommand
 from .help import HelpAction, HelpCommand
 from .utils import damerau_levenshtein, COST
 
-# Make sure the cliff library has a logging handler
-# in case the app developer doesn't set up logging.
-# For py26 compat, create a NullHandler
 
-if hasattr(logging, 'NullHandler'):
-    NullHandler = logging.NullHandler
-else:
-    class NullHandler(logging.Handler):
-        def handle(self, record):
-            pass
-
-        def emit(self, record):
-            pass
-
-        def createLock(self):
-            self.lock = None
-
-logging.getLogger('cliff').addHandler(NullHandler())
+logging.getLogger('cliff').addHandler(logging.NullHandler())
 
 
 class App(object):
@@ -53,6 +35,9 @@ class App(object):
     :param interactive_app_factory: callable to create an
                                     interactive application
     :paramtype interactive_app_factory: cliff.interactive.InteractiveApp
+    :param deferred_help: True - Allow subcommands to accept --help with
+                          allowing to defer help print after initialize_app
+    :paramtype deferred_help: bool
     """
 
     NAME = os.path.splitext(os.path.basename(sys.argv[0]))[0]
@@ -85,24 +70,9 @@ class App(object):
             locale.setlocale(locale.LC_ALL, '')
         except locale.Error:
             pass
-        if sys.version_info[:2] == (2, 6):
-            # Configure the input and output streams. If a stream is
-            # provided, it must be configured correctly by the
-            # caller. If not, make sure the versions of the standard
-            # streams used by default are wrapped with encodings. This
-            # works around a problem with Python 2.6 fixed in 2.7 and
-            # later (http://hg.python.org/cpython/rev/e60ef17561dc/).
-            lang, encoding = locale.getdefaultlocale()
-            encoding = (getattr(sys.stdout, 'encoding', None) or
-                        encoding or
-                        self.DEFAULT_OUTPUT_ENCODING)
-            self.stdin = stdin or codecs.getreader(encoding)(sys.stdin)
-            self.stdout = stdout or codecs.getwriter(encoding)(sys.stdout)
-            self.stderr = stderr or codecs.getwriter(encoding)(sys.stderr)
-        else:
-            self.stdin = stdin or sys.stdin
-            self.stdout = stdout or sys.stdout
-            self.stderr = stderr or sys.stderr
+        self.stdin = stdin or sys.stdin
+        self.stdout = stdout or sys.stdout
+        self.stderr = stderr or sys.stderr
 
     def build_option_parser(self, description, version,
                             argparse_kwargs=None):
@@ -130,25 +100,26 @@ class App(object):
             action='version',
             version='%(prog)s {0}'.format(version),
         )
-        parser.add_argument(
+        verbose_group = parser.add_mutually_exclusive_group()
+        verbose_group.add_argument(
             '-v', '--verbose',
             action='count',
             dest='verbose_level',
             default=self.DEFAULT_VERBOSE_LEVEL,
             help='Increase verbosity of output. Can be repeated.',
         )
-        parser.add_argument(
-            '--log-file',
-            action='store',
-            default=None,
-            help='Specify a file to log output. Disabled by default.',
-        )
-        parser.add_argument(
+        verbose_group.add_argument(
             '-q', '--quiet',
             action='store_const',
             dest='verbose_level',
             const=0,
             help='Suppress output except warnings and errors.',
+        )
+        parser.add_argument(
+            '--log-file',
+            action='store',
+            default=None,
+            help='Specify a file to log output. Disabled by default.',
         )
         if self.deferred_help:
             parser.add_argument(
@@ -163,7 +134,7 @@ class App(object):
                 action=HelpAction,
                 nargs=0,
                 default=self,  # tricky
-                help="Show this help message and exit.",
+                help="Show help message and exit.",
             )
         parser.add_argument(
             '--debug',
@@ -314,21 +285,22 @@ class App(object):
             prefix = candidate.split(sep)[0]
             # Give prefix match a very good score
             if candidate.startswith(cmd):
-                dist.append((candidate, 0))
+                dist.append((0, candidate))
                 continue
             # Levenshtein distance
-            dist.append((candidate, damerau_levenshtein(cmd, prefix, COST)+1))
-        dist = sorted(dist, key=operator.itemgetter(1, 0))
+            dist.append((damerau_levenshtein(cmd, prefix, COST)+1, candidate))
+
         matches = []
-        i = 0
-        # Find the best similarity
-        while (not dist[i][1]):
-            matches.append(dist[i][0])
-            i += 1
-        best_similarity = dist[i][1]
-        while (dist[i][1] == best_similarity):
-            matches.append(dist[i][0])
-            i += 1
+        match_distance = 0
+        for distance, candidate in sorted(dist):
+            if distance > match_distance:
+                if match_distance:
+                    # we copied all items with minimum distance, we are done
+                    break
+                # we copied all items with distance=0,
+                # now we match all candidates at the minimum distance
+                match_distance = distance
+            matches.append(candidate)
 
         return matches
 

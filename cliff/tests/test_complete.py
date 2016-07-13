@@ -32,6 +32,26 @@ def test_complete_dictionary():
     assert "2" == result[3][1]
 
 
+def test_complete_dictionary_subcmd():
+    sot = complete.CompleteDictionary()
+    sot.add_command("image delete".split(),
+                    [mock.Mock(option_strings=["1"])])
+    sot.add_command("image list".split(),
+                    [mock.Mock(option_strings=["2"])])
+    sot.add_command("image list better".split(),
+                    [mock.Mock(option_strings=["3"])])
+    assert "image" == sot.get_commands()
+    result = sot.get_data()
+    assert "image" == result[0][0]
+    assert "delete list list_better" == result[0][1]
+    assert "image_delete" == result[1][0]
+    assert "1" == result[1][1]
+    assert "image_list" == result[2][0]
+    assert "2 better" == result[2][1]
+    assert "image_list_better" == result[3][0]
+    assert "3" == result[3][1]
+
+
 class FakeStdout:
     def __init__(self):
         self.content = []
@@ -128,3 +148,14 @@ def test_complete_command_take_action():
     assert "  cmds='complete help'\n" in content
     assert "  cmds_complete='-h --help --name --shell'\n" in content
     assert "  cmds_help='-h --help'\n" in content
+
+
+def test_complete_command_remove_dashes():
+    sot, app, cmd_mgr = given_complete_command()
+    parsed_args = mock.Mock()
+    parsed_args.name = "test-take"
+    parsed_args.shell = "bash"
+    content = app.stdout.content
+    assert 0 == sot.take_action(parsed_args)
+    assert "_test_take()\n" in content[0]
+    assert "complete -F _test_take test-take\n" in content[-1]

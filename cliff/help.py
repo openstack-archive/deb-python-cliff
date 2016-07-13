@@ -20,7 +20,7 @@ class HelpAction(argparse.Action):
         for name, ep in sorted(command_manager):
             try:
                 factory = ep.load()
-            except Exception as err:
+            except Exception:
                 app.stdout.write('Could not load %r\n' % ep)
                 if namespace.debug:
                     traceback.print_exc(file=app.stdout)
@@ -77,8 +77,8 @@ class HelpCommand(Command):
                          else ' '.join([self.app.NAME, cmd_name])
                          )
             cmd_parser = cmd.get_parser(full_name)
+            cmd_parser.print_help(self.app.stdout)
         else:
             action = HelpAction(None, None, default=self.app)
-            action(self.app.parser, self.app.parser, None, None)
-        cmd_parser.print_help(self.app.stdout)
+            action(self.app.parser, self.app.options, None, None)
         return 0

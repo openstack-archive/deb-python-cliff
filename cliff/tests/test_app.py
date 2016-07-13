@@ -4,15 +4,14 @@ try:
     from StringIO import StringIO
 except ImportError:
     from io import StringIO
-import sys
 
-import nose
 import mock
 
 from cliff.app import App
 from cliff.command import Command
 from cliff.commandmanager import CommandManager
 from cliff.tests import utils
+from cliff.utils import damerau_levenshtein, COST
 
 
 def make_app(**kwargs):
@@ -232,150 +231,46 @@ def test_option_parser_conflicting_option_custom_arguments_should_not_throw():
             parser.add_argument(
                 '-h', '--help',
                 default=self,  # tricky
-                help="Show this help message and exit.",
+                help="Show help message and exit.",
             )
 
     MyApp()
 
 
-def test_output_encoding_default():
-    # The encoding should come from getdefaultlocale() because
-    # stdout has no encoding set.
-    if sys.version_info[:2] != (2, 6):
-        raise nose.SkipTest('only needed for python 2.6')
-    data = '\xc3\xa9'
-    u_data = data.decode('utf-8')
+def test_option_parser_abbrev_issue():
+    class MyCommand(Command):
+        def get_parser(self, prog_name):
+            parser = super(MyCommand, self).get_parser(prog_name)
+            parser.add_argument("--end")
+            return parser
+
+        def take_action(self, parsed_args):
+            assert(parsed_args.end == '123')
+
+    class MyCommandManager(CommandManager):
+        def load_commands(self, namespace):
+            self.add_command("mycommand", MyCommand)
 
     class MyApp(App):
         def __init__(self):
             super(MyApp, self).__init__(
                 description='testing',
                 version='0.1',
-                command_manager=CommandManager('tests'),
+                command_manager=MyCommandManager(None),
             )
 
-    stdout = StringIO()
+        def build_option_parser(self, description, version):
+            parser = super(MyApp, self).build_option_parser(
+                description,
+                version,
+                argparse_kwargs={'allow_abbrev': False})
+            parser.add_argument('--endpoint')
+            return parser
 
-    getdefaultlocale = mock.Mock(return_value=('ignored', 'utf-8'))
-
-    with mock.patch('sys.stdout', stdout):
-        with mock.patch('locale.getdefaultlocale', getdefaultlocale):
-            app = MyApp()
-            app.stdout.write(u_data)
-            actual = stdout.getvalue()
-            assert data == actual
-
-
-def test_output_encoding_cliff_default():
-    # The encoding should come from cliff.App.DEFAULT_OUTPUT_ENCODING
-    # because the other values are missing or None
-    if sys.version_info[:2] != (2, 6):
-        raise nose.SkipTest('only needed for python 2.6')
-    data = '\xc3\xa9'
-    u_data = data.decode('utf-8')
-
-    class MyApp(App):
-        def __init__(self):
-            super(MyApp, self).__init__(
-                description='testing',
-                version='0.1',
-                command_manager=CommandManager('tests'),
-            )
-
-    stdout = StringIO()
-    getdefaultlocale = mock.Mock(return_value=('ignored', None))
-
-    with mock.patch('sys.stdout', stdout):
-        with mock.patch('locale.getdefaultlocale', getdefaultlocale):
-            app = MyApp()
-            app.stdout.write(u_data)
-            actual = stdout.getvalue()
-            assert data == actual
-
-
-def test_output_encoding_sys():
-    # The encoding should come from sys.stdout because it is set
-    # there.
-    if sys.version_info[:2] != (2, 6):
-        raise nose.SkipTest('only needed for python 2.6')
-    data = '\xc3\xa9'
-    u_data = data.decode('utf-8')
-
-    class MyApp(App):
-        def __init__(self):
-            super(MyApp, self).__init__(
-                description='testing',
-                version='0.1',
-                command_manager=CommandManager('tests'),
-            )
-
-    stdout = StringIO()
-    stdout.encoding = 'utf-8'
-    getdefaultlocale = mock.Mock(return_value=('ignored', 'utf-16'))
-
-    with mock.patch('sys.stdout', stdout):
-        with mock.patch('locale.getdefaultlocale', getdefaultlocale):
-            app = MyApp()
-            app.stdout.write(u_data)
-            actual = stdout.getvalue()
-            assert data == actual
-
-
-def test_error_encoding_default():
-    # The encoding should come from getdefaultlocale() because
-    # stdout has no encoding set.
-    if sys.version_info[:2] != (2, 6):
-        raise nose.SkipTest('only needed for python 2.6')
-    data = '\xc3\xa9'
-    u_data = data.decode('utf-8')
-
-    class MyApp(App):
-        def __init__(self):
-            super(MyApp, self).__init__(
-                description='testing',
-                version='0.1',
-                command_manager=CommandManager('tests'),
-            )
-
-    stderr = StringIO()
-    getdefaultlocale = mock.Mock(return_value=('ignored', 'utf-8'))
-
-    with mock.patch('sys.stderr', stderr):
-        with mock.patch('locale.getdefaultlocale', getdefaultlocale):
-            app = MyApp()
-            app.stderr.write(u_data)
-            actual = stderr.getvalue()
-            assert data == actual
-
-
-def test_error_encoding_sys():
-    # The encoding should come from sys.stdout (not sys.stderr)
-    # because it is set there.
-    if sys.version_info[:2] != (2, 6):
-        raise nose.SkipTest('only needed for python 2.6')
-    data = '\xc3\xa9'
-    u_data = data.decode('utf-8')
-
-    class MyApp(App):
-        def __init__(self):
-            super(MyApp, self).__init__(
-                description='testing',
-                version='0.1',
-                command_manager=CommandManager('tests'),
-            )
-
-    stdout = StringIO()
-    stdout.encoding = 'utf-8'
-    stderr = StringIO()
-    getdefaultlocale = mock.Mock(return_value=('ignored', 'utf-16'))
-
-    with mock.patch('sys.stdout', stdout):
-        with mock.patch('sys.stderr', stderr):
-            with mock.patch('locale.getdefaultlocale', getdefaultlocale):
-                app = MyApp()
-                app.stderr.write(u_data)
-                actual = stderr.getvalue()
-                assert data == actual
+    app = MyApp()
+    # NOTE(jd) --debug is necessary so assert in take_action() raises correctly
+    # here
+    app.run(['--debug', 'mycommand', '--end', '123'])
 
 
 def _test_help(deferred_help):
@@ -448,3 +343,58 @@ def test_list_matching_commands():
     assert "test: 't' is not a test command. See 'test --help'." in output
     assert 'Did you mean one of these?' in output
     assert 'three word command\n  two words\n' in output
+
+
+def test_fuzzy_no_commands():
+    cmd_mgr = CommandManager('cliff.fuzzy')
+    app = App('test', '1.0', cmd_mgr)
+    cmd_mgr.commands = {}
+    matches = app.get_fuzzy_matches('foo')
+    assert matches == []
+
+
+def test_fuzzy_common_prefix():
+    # searched string is a prefix of all commands
+    cmd_mgr = CommandManager('cliff.fuzzy')
+    app = App('test', '1.0', cmd_mgr)
+    cmd_mgr.commands = {}
+    cmd_mgr.add_command('user list', utils.TestCommand)
+    cmd_mgr.add_command('user show', utils.TestCommand)
+    matches = app.get_fuzzy_matches('user')
+    assert matches == ['user list', 'user show']
+
+
+def test_fuzzy_same_distance():
+    # searched string has the same distance to all commands
+    cmd_mgr = CommandManager('cliff.fuzzy')
+    app = App('test', '1.0', cmd_mgr)
+    cmd_mgr.add_command('user', utils.TestCommand)
+    for cmd in cmd_mgr.commands.keys():
+        assert damerau_levenshtein('node', cmd, COST) == 8
+    matches = app.get_fuzzy_matches('node')
+    assert matches == ['complete', 'help', 'user']
+
+
+def test_fuzzy_no_prefix():
+    # search by distance, no common prefix with any command
+    cmd_mgr = CommandManager('cliff.fuzzy')
+    app = App('test', '1.0', cmd_mgr)
+    cmd_mgr.add_command('user', utils.TestCommand)
+    matches = app.get_fuzzy_matches('uesr')
+    assert matches == ['user']
+
+
+def test_verbose():
+    app, command = make_app()
+    app.clean_up = mock.MagicMock(name='clean_up')
+    app.run(['--verbose', 'mock'])
+    app.clean_up.assert_called_once_with(command.return_value, 0, None)
+    app.clean_up.reset_mock()
+    app.run(['--quiet', 'mock'])
+    app.clean_up.assert_called_once_with(command.return_value, 0, None)
+    try:
+        app.run(['--verbose', '--quiet', 'mock'])
+    except SystemExit:
+        pass
+    else:
+        raise Exception('Exception was not thrown')

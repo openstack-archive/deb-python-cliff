@@ -21,9 +21,21 @@ class CompleteDictionary:
         optstr = ' '.join(opt for action in actions
                           for opt in action.option_strings)
         dicto = self._dictionary
+        last_cmd = command[-1]
         for subcmd in command[:-1]:
-            dicto = dicto.setdefault(subcmd, {})
-        dicto[command[-1]] = optstr
+            subdata = dicto.get(subcmd)
+            # If there is a string in corresponding dictionary, it means the
+            # verb used for the command exists already.
+            # For example, {'cmd': 'action'}, and we add the command
+            # 'cmd_other'. We want the result to be
+            # {'cmd': 'action other', 'cmd_other': 'sub_action'}
+            if isinstance(subdata, six.string_types):
+                subdata += ' ' + last_cmd
+                dicto[subcmd] = subdata
+                last_cmd = subcmd + '_' + last_cmd
+            else:
+                dicto = dicto.setdefault(subcmd, {})
+        dicto[last_cmd] = optstr
 
     def get_commands(self):
         return ' '.join(k for k in sorted(self._dictionary.keys()))
@@ -57,8 +69,13 @@ class CompleteShellBase(object):
         self.output.write(self.get_header())
         self.output.write("  cmds='{0}'\n".format(cmdo))
         for datum in data:
+            datum = (datum[0].replace('-', '_'), datum[1])
             self.output.write('  cmds_{0}=\'{1}\'\n'.format(*datum))
         self.output.write(self.get_trailer())
+
+    @property
+    def escaped_name(self):
+        return self.name.replace('-', '_')
 
 
 class CompleteNoCode(CompleteShellBase):
@@ -81,7 +98,7 @@ class CompleteBash(CompleteShellBase):
         super(CompleteBash, self).__init__(name, output)
 
     def get_header(self):
-        return ('_' + self.name + """()
+        return ('_' + self.escaped_name + """()
 {
   local cur prev words
   COMPREPLY=()
@@ -92,6 +109,8 @@ class CompleteBash(CompleteShellBase):
 
     def get_trailer(self):
         return ("""
+  dash=-
+  underscore=_
   cmd=""
   words[0]=""
   completed="${cmds}"
@@ -106,6 +125,7 @@ class CompleteBash(CompleteShellBase):
       proposed="${cmd}_${var}"
     fi
     local i="cmds_${proposed}"
+    i=${i//$dash/$underscore}
     local comp="${!i}"
     if [ -z "${comp}" ] ; then
       break
@@ -127,7 +147,7 @@ class CompleteBash(CompleteShellBase):
   fi
   return 0
 }
-complete -F _""" + self.name + ' ' + self.name + '\n')
+complete -F _""" + self.escaped_name + ' ' + self.name + '\n')
 
 
 class CompleteCommand(command.Command):

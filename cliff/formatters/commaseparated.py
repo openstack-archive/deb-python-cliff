@@ -1,10 +1,15 @@
 """Output formatters using csv format.
 """
 
-import unicodecsv as csv
 import os
+import sys
 
 from .base import ListFormatter
+
+if sys.version_info[0] == 3:
+    import csv
+else:
+    import unicodecsv as csv
 
 
 class CSVLister(ListFormatter):
