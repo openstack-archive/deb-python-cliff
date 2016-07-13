@@ -6,6 +6,8 @@ python-cliff (2.1.0-1) experimental; urgency=medium
   [ Thomas Goirand ]
   * New upstream release.
   * Remove arparse in requirements.txt patch.
+  * Fixed (build-)depends for this release.
+  * Removed Py 3.5 unit test patch.
 
  -- Thomas Goirand <zigo@debian.org>  Wed, 13 Jul 2016 13:48:36 +0000
 
