@@ -1,0 +1,8 @@
+Code-Review+2: Igor Yozhikov <iyozhikov@mirantis.com>
+Workflow+1: Igor Yozhikov <iyozhikov@mirantis.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Sat, 03 Sep 2016 20:41:57 +0000
+Reviewed-on: https://review.openstack.org/357809
+Project: openstack/deb-python-cliff
+Branch: refs/heads/debian/newton
