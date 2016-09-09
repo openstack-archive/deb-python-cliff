@@ -1,0 +1,9 @@
+Code-Review+2: Doug Hellmann <doug@doughellmann.com>
+Code-Review+2: Terry Howe <terrylhowe@gmail.com>
+Workflow+1: Terry Howe <terrylhowe@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Tue, 24 Nov 2015 21:12:09 +0000
+Reviewed-on: https://review.openstack.org/249359
+Project: openstack/deb-python-cliff
+Branch: refs/heads/stable/liberty

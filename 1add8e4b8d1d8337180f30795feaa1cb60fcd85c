@@ -1,0 +1,10 @@
+Code-Review+2: Terry Howe <terrylhowe@gmail.com>
+Code-Review+1: Clint Adams <clint@gcfm.net>
+Code-Review+2: Victor Stinner <vstinner@redhat.com>
+Workflow+1: Victor Stinner <vstinner@redhat.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Mon, 23 Nov 2015 11:32:36 +0000
+Reviewed-on: https://review.openstack.org/228920
+Project: openstack/deb-python-cliff
+Branch: refs/heads/stable/liberty
