@@ -38,8 +38,8 @@ Build-Depends-Indep: python-cmd2,
                      python3-unicodecsv,
                      python3-yaml,
 Standards-Version: 3.9.8
-Vcs-Browser: https://anonscm.debian.org/gitweb/?p=openstack/python-cliff.git
-Vcs-Git: https://anonscm.debian.org/git/openstack/python-cliff.git
+Vcs-Browser: https://git.openstack.org/cgit/openstack/deb-python-cliff?h=debian%2Fnewton
+Vcs-Git: https://git.openstack.org/openstack/deb-python-cliff -b debian/newton
 Homepage: https://github.com/dreamhost/cliff
 
 Package: python-cliff
