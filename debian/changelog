@@ -1,4 +1,4 @@
-python-cliff (1.15.0-5) UNRELEASED; urgency=medium
+python-cliff (1.15.0-5) unstable; urgency=medium
 
   * d/rules: Changed UPSTREAM_GIT protocol to https
   * d/s/options: extend-diff-ignore of .gitreview
