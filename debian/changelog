@@ -1,3 +1,9 @@
+python-cliff (1.15.0-6) UNRELEASED; urgency=medium
+
+  * Bumped debhelper compat version to 10
+
+ -- Ondřej Nový <onovy@debian.org>  Thu, 24 Nov 2016 00:04:33 +0100
+
 python-cliff (1.15.0-5) unstable; urgency=medium
 
   * d/rules: Changed UPSTREAM_GIT protocol to https
