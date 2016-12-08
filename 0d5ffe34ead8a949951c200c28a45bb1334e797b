@@ -1,0 +1,10 @@
+Code-Review+1: Masayuki Igawa <masayuki@igawa.me>
+Code-Review+2: Mehdi Abaakouk (sileht) <sileht@redhat.com>
+Code-Review+2: Flavio Percoco <fpercoco@redhat.com>
+Workflow+1: Flavio Percoco <fpercoco@redhat.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 07 Dec 2016 13:51:38 +0000
+Reviewed-on: https://review.openstack.org/398356
+Project: openstack/deb-python-cliff
+Branch: refs/heads/master
