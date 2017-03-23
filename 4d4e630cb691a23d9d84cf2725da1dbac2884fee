@@ -1,0 +1,9 @@
+Code-Review+2: Steve Martinelli <s.martinelli@gmail.com>
+Code-Review+2: Dean Troyer <dtroyer@gmail.com>
+Workflow+1: Dean Troyer <dtroyer@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 22 Mar 2017 23:24:19 +0000
+Reviewed-on: https://review.openstack.org/363816
+Project: openstack/deb-python-cliff
+Branch: refs/heads/stable/mitaka
