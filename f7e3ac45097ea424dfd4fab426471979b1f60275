@@ -1,0 +1,10 @@
+Code-Review+2: Doug Hellmann <doug@doughellmann.com>
+Code-Review+1: Rui Chen <chenrui.momo@gmail.com>
+Code-Review+2: Dean Troyer <dtroyer@gmail.com>
+Workflow+1: Dean Troyer <dtroyer@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 19 Apr 2017 16:40:57 +0000
+Reviewed-on: https://review.openstack.org/454132
+Project: openstack/deb-python-cliff
+Branch: refs/heads/master
