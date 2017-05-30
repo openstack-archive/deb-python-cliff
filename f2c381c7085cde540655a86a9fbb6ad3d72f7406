@@ -1,0 +1,11 @@
+Code-Review+2: Doug Hellmann <doug@doughellmann.com>
+Code-Review+2: Dean Troyer <dtroyer@gmail.com>
+Code-Review+1: Yushiro FURUKAWA <y.furukawa_2@jp.fujitsu.com>
+Code-Review+2: Steve Martinelli <s.martinelli@gmail.com>
+Workflow+1: Steve Martinelli <s.martinelli@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Tue, 30 May 2017 01:10:34 +0000
+Reviewed-on: https://review.openstack.org/466271
+Project: openstack/deb-python-cliff
+Branch: refs/heads/master
