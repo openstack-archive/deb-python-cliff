@@ -1,0 +1,10 @@
+Code-Review+1: Rajath Agasthya <rajagast@cisco.com>
+Code-Review+2: Doug Hellmann <doug@doughellmann.com>
+Code-Review+1: Akihiro Motoki <amotoki@gmail.com>
+Workflow+1: Doug Hellmann <doug@doughellmann.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 28 Jun 2017 21:54:29 +0000
+Reviewed-on: https://review.openstack.org/477164
+Project: openstack/deb-python-cliff
+Branch: refs/heads/master
