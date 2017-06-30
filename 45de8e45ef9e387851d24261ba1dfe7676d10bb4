@@ -1,0 +1,8 @@
+Code-Review+2: Dean Troyer <dtroyer@gmail.com>
+Workflow+1: Dean Troyer <dtroyer@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Fri, 30 Jun 2017 16:56:30 +0000
+Reviewed-on: https://review.openstack.org/468198
+Project: openstack/deb-python-cliff
+Branch: refs/heads/master
