@@ -1,0 +1,11 @@
+Code-Review+2: Steve Martinelli <s.martinelli@gmail.com>
+Code-Review+1: Stephen Finucane <sfinucan@redhat.com>
+Code-Review+1: Akihiro Motoki <amotoki@gmail.com>
+Code-Review+2: Dean Troyer <dtroyer@gmail.com>
+Workflow+1: Dean Troyer <dtroyer@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Fri, 30 Jun 2017 15:09:27 +0000
+Reviewed-on: https://review.openstack.org/468196
+Project: openstack/deb-python-cliff
+Branch: refs/heads/master
